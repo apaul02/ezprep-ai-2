@@ -32,6 +32,7 @@ export function Navbar() {
             <Button 
               variant="ghost" 
               className="text-white hover:bg-transparent hover:text-white hover:scale-105 transform transition-transform duration-200 hover:no-underline"
+              onClick={() => window.location.href = '/signup'}
             >
               Sign Up
             </Button>
