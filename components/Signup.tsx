@@ -12,11 +12,13 @@ import Link from "next/link"
 import { useToast } from "@/hooks/use-toast"
 import { useRouter } from "next/navigation"
 import { signIn } from "next-auth/react"
+import { signup } from "@/lib/actions/signup"
 
 const signupSchema = z.object({
   email: z.string().email({
     message: "Please enter a valid Email"
   }),
+  phone: z.string().min(10, {message: "Phone number must be at least 10 characters"}),
   username: z.string().min(4, {
     message: "Username must be at least 4 characters"
   }),
@@ -40,6 +42,7 @@ export function SignupForm() {
     defaultValues: {
       email: "",
       username: "",
+      phone: "",
       name: "",
       password: "",
       confirmPassword: ""
@@ -47,22 +50,78 @@ export function SignupForm() {
   })
 
   async function onSubmit(values: z.infer<typeof signupSchema>) {
-    // ... existing onSubmit logic ...
+    try {
+      const response = await signup(values.name, values.email, values.phone, values.username, values.password)
+      if(response.error) {
+        if(response.error.toLowerCase().includes("email")) {
+          form.setError("email", {
+            type: "manual",
+            message: "Email already exists, please use another email"
+          })
+        }else if(response.error.toLowerCase().includes("username")) {
+          form.setError("username", {
+            type: "manual",
+            message: "Username already exists, please use another username"
+          })
+        }else if(response.error.toLowerCase().includes("phone")) {
+          form.setError("phone", {
+            type: "manual",
+            message: "Phone number already exists, please use another phone number"
+          })
+        }else {
+          toast({
+            title: "Error",
+            description: response.message,
+            variant: "destructive"
+          })
+        }
+        console.log(response);
+        console.log(values)
+        return;
+      }
+      const signInResult = await signIn("credentials", {
+        email: values.email,
+        password: values.password,
+        redirect: false
+      });
+      if(signInResult?.error) {
+        toast({
+          title: "Error",
+          description: signInResult.error,
+          variant: "destructive"
+        })
+        return;
+      }
+
+      toast({
+        title: "Account created",
+        description: "You have successfully created an account",
+      })
+      console.log("signed up")
+
+      router.push("/test")
+    }catch(error) {
+      toast({
+        title: "Error",
+        description: "An error occurred, please try again",
+        variant: "destructive"
+      })
+    }
     console.log(values)
   }
 
   return (
-    <div className="min-h-screen bg-[#FCF3E4] flex items-center justify-center p-4">
+    <div className="min-h-screen bg-[#FCF3E4] flex items-center justify-center p-2">
       <Card className="w-full max-w-md border border-[#292828]/10 bg-white/50 shadow-none">
         <CardHeader>
-          <div className="flex justify-between items-center mb-4">
+          <div className="flex justify-between items-center">
             {/* <CircleCheckBig 
               className="h-8 w-8 cursor-pointer text-[#292828]" 
               onClick={() => router.push("/")}
             /> */}
           </div>
           <div className="text-center">
-            <h2 className="text-4xl font-gloock mb-2">Create Account</h2>
+            <h2 className="text-4xl font-gloock mb-1">Create Account</h2>
             <p className="text-[#292828]/70">Start your learning journey today</p>
           </div>
         </CardHeader>
@@ -75,6 +134,23 @@ export function SignupForm() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-sm font-medium text-[#292828]">Email</FormLabel>
+                    <FormControl>
+                      <Input
+                        className="px-4 py-3 rounded-lg border border-[#292828]/10 bg-white/50 focus:outline-none focus:border-[#292828]/30"
+                        placeholder="johndoe@example.com"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage className="text-sm" />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="phone"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-sm font-medium text-[#292828]">Phone</FormLabel>
                     <FormControl>
                       <Input
                         className="px-4 py-3 rounded-lg border border-[#292828]/10 bg-white/50 focus:outline-none focus:border-[#292828]/30"
