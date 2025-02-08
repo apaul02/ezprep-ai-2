@@ -11,6 +11,7 @@ export default {
     extend: {
       fontFamily: {
         gloock: ['var(--font-gloock)'],
+        alata: ['var(--font-alata)'],
       },
       colors: {
   			background: 'hsl(var(--background))',
