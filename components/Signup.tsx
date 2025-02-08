@@ -137,7 +137,7 @@ export function SignupForm() {
                     <FormControl>
                       <Input
                         className="px-4 py-3 rounded-lg border border-[#292828]/10 bg-white/50 focus:outline-none focus:border-[#292828]/30"
-                        placeholder="johndoe@example.com"
+                        placeholder="diehard@example.com"
                         {...field}
                       />
                     </FormControl>
@@ -154,7 +154,7 @@ export function SignupForm() {
                     <FormControl>
                       <Input
                         className="px-4 py-3 rounded-lg border border-[#292828]/10 bg-white/50 focus:outline-none focus:border-[#292828]/30"
-                        placeholder="johndoe@example.com"
+                        placeholder="98XXX8XXXX"
                         {...field}
                       />
                     </FormControl>
@@ -188,7 +188,7 @@ export function SignupForm() {
                     <FormControl>
                       <Input
                         className="px-4 py-3 rounded-lg border border-[#292828]/10 bg-white/50 focus:outline-none focus:border-[#292828]/30"
-                        placeholder="John Doe"
+                        placeholder="Jake Peralta"
                         {...field}
                       />
                     </FormControl>
@@ -205,7 +205,7 @@ export function SignupForm() {
                     <FormControl>
                       <Input
                         className="px-4 py-3 rounded-lg border border-[#292828]/10 bg-white/50 focus:outline-none focus:border-[#292828]/30"
-                        type="password"
+                        type="password" placeholder="ShhhTopSecret"
                         {...field}
                       />
                     </FormControl>
@@ -223,7 +223,7 @@ export function SignupForm() {
                       <Input
                         className="px-4 py-3 rounded-lg border border-[#292828]/10 bg-white/50 focus:outline-none focus:border-[#292828]/30"
                         type="password"
-                        placeholder="Confirm password"
+                        placeholder="the same from above"
                         {...field}
                       />
                     </FormControl>

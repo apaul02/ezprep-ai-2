@@ -110,7 +110,7 @@ export function LoginForm() {
                     <FormControl>
                       <Input
                         className="px-4 py-3 rounded-lg border border-[#292828]/10 bg-white/50 focus:outline-none focus:border-[#292828]/30"
-                        placeholder="johndoe@example.com"
+                        placeholder="johnwick@example.com"
                         {...field}
                       />
                     </FormControl>
@@ -128,7 +128,7 @@ export function LoginForm() {
                     <FormControl>
                       <Input
                         className="px-4 py-3 rounded-lg border border-[#292828]/10 bg-white/50 focus:outline-none focus:border-[#292828]/30"
-                        type="password"
+                        type="password" placeholder="Shhhh!"
                         {...field}
                       />
                     </FormControl>
@@ -140,7 +140,7 @@ export function LoginForm() {
                 className="w-full py-6 bg-[#292828] text-white rounded-lg hover:bg-[#292828]/90 transition-colors text-base"
                 type="submit"
               >
-                Create Account
+                Dive In
               </Button>
             </form>
           </Form>
