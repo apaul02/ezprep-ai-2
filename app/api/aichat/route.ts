@@ -2,8 +2,7 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
 
-// Track conversation history (simple in-memory store)
-const conversationHistory = new Map<string, string[]>(); // Use user ID as key
+const conversationHistory = new Map<string, string[]>();
 
 function cleanMarkdown(text: string): string {
   return text
@@ -21,65 +20,65 @@ export async function POST(request: Request) {
     }
 
     const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
-    
-    // Get or initialize history
     const history = conversationHistory.get(userId) || [];
     history.push(`Student: ${message}`);
 
-    // Enhanced prompt template
-    // Detect if the question requires detailed explanation
-    const needsExplanation = message.toLowerCase().includes('explain') ||
-                            message.toLowerCase().includes('how') ||
-                            message.toLowerCase().includes('why') ||
-                            message.toLowerCase().includes('what is') ||
-                            message.toLowerCase().includes('describe');
+    const needsExplanation = message.toLowerCase().includes('explain') || 
+                            /(how|why|detail|expand|elaborate)/i.test(message);
 
     const prompt = `
-      You are a university tutor helping students learn. Adapt your responses based on these rules:
+      You are Athena, the friendly school tutor AI. Follow these guidelines:
 
-      1. Response Style:
+      1. Response Foundation:
+      🧠 Start with 1-sentence simple definition
+      🔢 Break into 3-5 numbered key points
+      🌟 Real-world example (school relatable)
+      ➡️ Analogy ("Like how...")
+      ⚠️ Common mistakes warning
+
+      2. Explanation Depth:
       ${needsExplanation ? `
-      - Break down concepts step-by-step
-      - Use examples and analogies
-      - End with a quick comprehension check
+      📚 Add 2 more examples (1 simple, 1 complex)
+      📊 Text-based diagram description
+      🔄 Compare/contrast with related concept
+      🎓 Memory tip (mnemonic/word association)
+      ❓ End with 2 practice questions
       ` : `
-      - Give direct, concise answers (1-2 sentences max)
-      - Be precise and factual
-      - No unnecessary elaboration
+      💡 Keep examples to 1 primary instance
+      📝 Focus on core concept only
       `}
 
-      2. Context Awareness:
-      - Remember previous conversation context
-      - Reference relevant past discussions if applicable
-      
-      3. Formatting:
-      - NO MARKDOWN
-      - Use clear breaks between paragraphs
-      - Important terms in _underscores_
+      3. Student-Friendly Format:
+      - Use _emphasis_ for key terms
+      - Paragraph breaks every 3-4 sentences
+      - No markdown ever
+      - Max 150 words ${needsExplanation ? '300' : '150'} words
 
-      --- Conversation History ---
-      ${history.join('\n')}
-      ----------------------------
+      4. Conversation Flow:
+      🔗 Reference last 2-3 messages naturally
+      🤔 Ask "Should I rephrase any part?"
+      📌 End with "Want me to simplify/expand something?"
 
-      Current Question: ${message}
+      --- History ---
+      ${history.slice(-6).join('\n')}
+      -----------------
 
-      ${needsExplanation ? 'Provide a detailed explanation.' : 'Provide a concise answer.'}
+      Student Query: "${message}"
     `;
 
     const result = await model.generateContent(prompt);
     const response = await result.response;
     const cleanedResponse = cleanMarkdown(response.text());
-    
-    // Update history (limit to last 5 exchanges)
-    history.push(`Tutor: ${cleanedResponse}`);
-    if (history.length > 10) history.splice(0, 2); // Keep 5 Q/A pairs
+
+    history.push(`Athena: ${cleanedResponse}`);
+    if (history.length > 10) history.splice(0, 2);
     conversationHistory.set(userId, history);
 
     return Response.json({ response: cleanedResponse });
   } catch (error) {
-    console.error('Chat Error:', error);
+    console.error('Tutor Error:', error);
     return Response.json(
-      { error: 'Learning service unavailable. Try again later.' },
+      { error: 'Study session paused. Try again in a moment!' },
       { status: 503 }
     );
   }
