@@ -1,9 +1,11 @@
 "use client"
 
 import { useState } from "react"
+import Image from "next/image"
 import { Navbar } from "@/components/Navbar"
 import { Footer } from "@/components/Footer"
 import { Button } from "@/components/ui/button"
+import HeroVideoDialog from "@/components/magicui/hero-video-dialog"
 
 export default function Home() {
   const [activeSection, setActiveSection] = useState("flashcards")
@@ -113,16 +115,26 @@ export default function Home() {
               </div>
             </div>
           </div>
+          
         </section>
 
         {/* Features Section */}
         <section className="container mx-auto px-4 py-24 max-w-6xl">
-          <div className="max-w-3xl">
+          <div className="max-w-3xl relative">
             <h2 className="text-[#292828] text-6xl font-gloock mb-6">
               your &quot;swiss knife&quot; for
               <br />
               learning anything.
             </h2>
+            <div className="absolute -right-80 -top-40 transform ">
+              <Image
+                src="/images/try-hovering.png"
+                alt="Try hovering over the cards"
+                width={200}
+                height={80}
+                className="text-black"
+              />
+            </div>
             <p className="text-[#292828] text-lg mb-16">
               ezPrep simplifies learning with AI-powered flashcards, progress tracking, AI podcasts, and competitive
               leaderboards, all while rewarding your progress.
@@ -162,6 +174,15 @@ export default function Home() {
                 />
               </div>
             </div>
+          </div>
+          
+          {/* Hero Video Dialog */}
+          <div className="mt-16 pt-5 text-center">
+            <HeroVideoDialog
+              videoSrc="https://www.youtube.com/embed/dQw4w9WgXcQ"
+              thumbnailSrc="/images/thumbnail.jpeg"
+              animationStyle="from-bottom"
+            />
           </div>
         </section>
       </main>
