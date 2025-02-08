@@ -99,7 +99,7 @@ export function SignupForm() {
       })
       console.log("signed up")
 
-      router.push("/test")
+      router.push("/dashboard")
     }catch(error) {
       toast({
         title: "Error",

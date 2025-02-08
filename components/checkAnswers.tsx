@@ -6,6 +6,7 @@ import { getQuestions } from "@/lib/actions/getQuestions";
 import { createFlashcardHistory } from "@/lib/actions/createFlashcardHistory";
 import { getScores } from "@/lib/actions/getScores";
 import jsPDF from "jspdf";
+import { updateAura } from "@/lib/actions/updateAura";
 
 const MCQQuiz = () => {
   useEffect(() => {
@@ -54,6 +55,7 @@ const MCQQuiz = () => {
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
   const [quizComplete, setQuizComplete] = useState(false);
+  const [aura, setAura] = useState(0);
   const [flashcardHistory, setFlashcardHistory] = useState<
     {
       id: number;
@@ -89,6 +91,9 @@ const MCQQuiz = () => {
 
   const finishQuiz = async () => {
     await createFlashcardHistory(topic, score, questions.length);
+    setAura((score/questions.length)*5);
+    console.log(aura);
+    await updateAura(aura);
     setQuizComplete(true);
   };
 
@@ -108,6 +113,7 @@ const MCQQuiz = () => {
     setShowAnswer(false);
     setSelectedAnswer(null);
     setQuizComplete(false);
+    window.location.reload();
   };
 
   const generatePdf = () => {

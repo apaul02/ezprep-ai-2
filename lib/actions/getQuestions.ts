@@ -23,7 +23,7 @@ export async function getQuestions(prompt: string): Promise<McqItem[]> {
   const model = genAI.getGenerativeModel({
     model: "gemini-2.0-flash",
     generationConfig: { responseMimeType: "application/json" },
-    systemInstruction: `I am going to give you a paragraph or the name of the topic, generate me multiple choice types questions(minimum 10, max 20) like
+    systemInstruction: `I am going to give you a paragraph or the name of the topic, generate me multiple choice types questions(strictly 20) like
   {
     question: { "type": "string" },
     choice1: { "type": "string" },
