@@ -16,6 +16,7 @@ import {
     LogOut,
     X
 } from 'lucide-react';
+import { signOut } from 'next-auth/react';
 
 interface NavItem {
     icon: React.ReactNode;
@@ -178,8 +179,9 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
 
                 {/* Logout Button */}
                 <button
-                    onClick={() => {
+                    onClick={async() => {
                         // Add logout logic here
+                        await signOut();
                         router.push('/login');
                     }}
                     className={`

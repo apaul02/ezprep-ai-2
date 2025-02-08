@@ -4,8 +4,14 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import { useSession } from 'next-auth/react';
+import { redirect } from 'next/navigation';
 
 function VideoLearningPage() {
+  const session = useSession();
+  if(!session.data) {
+    redirect("/login")
+  }
   return (
     <div className="min-h-screen flex items-center justify-center p-6 bg-[#fcf3e4] relative overflow-hidden">
       {/* Floating background elements */}

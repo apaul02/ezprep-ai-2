@@ -4,8 +4,14 @@
 import { useState } from 'react';
 import PodcastPlayer from '@/components/PodcastPlayer';
 import { DialogueTurn } from '@/types/podcast';
+import { useSession } from 'next-auth/react';
+import { redirect } from 'next/navigation';
 
 export default function PodcastPage() {
+  const session = useSession();
+    if(!session.data) {
+      redirect("/login")
+    }
   const [prompt, setPrompt] = useState('');
   const [conversation, setConversation] = useState<DialogueTurn[]>([]);
   const [isGenerating, setIsGenerating] = useState(false);
