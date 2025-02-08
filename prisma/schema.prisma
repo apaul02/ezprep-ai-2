@@ -23,4 +23,16 @@ model User {
   createdAt DateTime @default(now())
   aura     Int      @default(0)
   coins    Int      @default(50)
+  flashcards FlashcardHistory[]
+}
+
+
+model FlashcardHistory {
+  id          Int      @id @default(autoincrement())
+  user        User     @relation(fields: [userId], references: [id])
+  userId      Int
+  keyword     String
+  score       Int
+  questions    Int
+  createdAt   DateTime @default(now())
 }
