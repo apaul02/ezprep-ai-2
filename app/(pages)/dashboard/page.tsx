@@ -20,6 +20,7 @@ export default function DashboardPage() {
           <h2 className="text-xl font-semibold text-[#8b5e34] mb-2">Video Learning</h2>
           <p className="text-gray-600">Watch educational videos and tutorials</p>
         </div>
+        
       </div>
     </div>
   );

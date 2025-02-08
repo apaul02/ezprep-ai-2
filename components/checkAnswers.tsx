@@ -1,124 +1,100 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { getQuestions } from "@/lib/actions/getQuestions";
 import { createFlashcardHistory } from "@/lib/actions/createFlashcardHistory";
 import { getScores } from "@/lib/actions/getScores";
 import jsPDF from "jspdf";
-import { useRouter } from "next/navigation";
-
-interface McqItem {
-  question: string;
-  choice1: string;
-  choice2: string;
-  choice3: string;
-  choice4: string;
-  answer: string;
-}
-
-interface FlashcardHistory {
-  id: number;
-  createdAt: Date;
-  userId: number;
-  keyword: string;
-  score: number;
-  questions: number;
-}
 
 const MCQQuiz = () => {
-  const router = useRouter();
+  useEffect(() => {
+    const getAllScores = async () => {
+      const response = await getScores();
+      console.log(response);
+      setFlashcardHistory(response || []);
+    };
+    getAllScores();
+  }, []);
+
   const [topic, setTopic] = useState("");
-  const [questions, setQuestions] = useState<McqItem[]>([]);
+  const [placeholderText, setPlaceholderText] = useState("Enter a topic to generate flashcards...");
+  
+  const placeholders = [
+    "Learn about Ancient Egypt...",
+    "Explore Quantum Physics...",
+    "Study World War II...",
+    "Discover Human Anatomy...",
+    "Master JavaScript Basics...",
+  ];
+
+  useEffect(() => {
+    let currentIndex = 0;
+    const interval = setInterval(() => {
+      currentIndex = (currentIndex + 1) % placeholders.length;
+      setPlaceholderText(placeholders[currentIndex]);
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const [questions, setQuestions] = useState<
+    {
+      question: string;
+      choice1: string;
+      choice2: string;
+      choice3: string;
+      choice4: string;
+      answer: string;
+    }[]
+  >([]);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [score, setScore] = useState(0);
   const [showAnswer, setShowAnswer] = useState(false);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
   const [quizComplete, setQuizComplete] = useState(false);
-  const [flashcardHistory, setFlashcardHistory] = useState<FlashcardHistory[]>([]);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const loadHistory = async () => {
-      try {
-        const response = await getScores();
-        setFlashcardHistory(response || []);
-      } catch (err) {
-        console.error("Failed to load history:", err);
-      }
-    };
-    loadHistory();
-  }, []);
+  const [flashcardHistory, setFlashcardHistory] = useState<
+    {
+      id: number;
+      createdAt: Date;
+      userId: number;
+      keyword: string;
+      score: number;
+      questions: number;
+    }[]
+  >([]);
 
   const handleSearch = async () => {
-    if (!topic.trim()) return;
-    
-    setError(null);
     setLoading(true);
-    
-    try {
-      const generatedQuestions = await getQuestions(topic);
-      if (!generatedQuestions?.length) {
-        throw new Error("Failed to generate questions");
-      }
-      
-      resetQuizState();
-      setQuestions(generatedQuestions);
-    } catch (err) {
-      handleGenerationError(err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleGenerationError = (error: unknown) => {
-    if (error instanceof Error) {
-      if (error.message.includes("BAD_PROMPT")) {
-        setError("Invalid request. Please contact the National Suicide Prevention Lifeline at 1-800-273-8255 if you're struggling.");
-      } else if (error.message.includes("INVALID_FORMAT")) {
-        setError("Failed to generate valid questions. Please try a different topic.");
-      } else {
-        setError("Failed to generate questions. Please try again.");
-      }
-    } else {
-      setError("An unexpected error occurred. Please try again.");
-    }
-    setQuestions([]);
-  };
-
-  const resetQuizState = () => {
+    const mockQuestions = await getQuestions(topic);
     setQuizComplete(false);
+    setQuestions(mockQuestions);
     setCurrentQuestion(0);
     setScore(0);
     setShowAnswer(false);
     setSelectedAnswer(null);
+    setLoading(false);
   };
 
   const handleAnswerClick = (choiceIndex: number): void => {
     if (showAnswer) return;
-    
     setSelectedAnswer(choiceIndex);
     setShowAnswer(true);
 
     if (choiceIndex === parseInt(questions[currentQuestion].answer)) {
-      setScore(prev => prev + 1);
+      setScore(score + 1);
     }
   };
 
   const finishQuiz = async () => {
-    try {
-      await createFlashcardHistory(topic, score, questions.length);
-      setQuizComplete(true);
-    } catch (err) {
-      setError("Failed to save quiz results. Please try again.");
-    }
+    await createFlashcardHistory(topic, score, questions.length);
+    setQuizComplete(true);
   };
 
   const nextQuestion = () => {
     if (currentQuestion < questions.length - 1) {
-      setCurrentQuestion(prev => prev + 1);
+      setCurrentQuestion(currentQuestion + 1);
       setShowAnswer(false);
       setSelectedAnswer(null);
     }
@@ -127,12 +103,16 @@ const MCQQuiz = () => {
   const startNewQuiz = () => {
     setTopic("");
     setQuestions([]);
-    resetQuizState();
-    router.refresh();
+    setCurrentQuestion(0);
+    setScore(0);
+    setShowAnswer(false);
+    setSelectedAnswer(null);
+    setQuizComplete(false);
   };
 
   const generatePdf = () => {
     const doc = new jsPDF();
+    
     doc.setFontSize(18);
     doc.text(`Flashcards for ${topic || "Quiz"}`, 10, 10);
     doc.setFontSize(12);
@@ -143,19 +123,29 @@ const MCQQuiz = () => {
       doc.text(`Question ${index + 1}: ${question.question}`, 10, yPosition);
       yPosition += 10;
       
-      const choices = [question.choice1, question.choice2, question.choice3, question.choice4];
+      const choices = [
+        question.choice1,
+        question.choice2,
+        question.choice3,
+        question.choice4,
+      ];
       
       choices.forEach((choice, i) => {
         const isCorrect = (i + 1) === parseInt(question.answer);
-        if (isCorrect) doc.setTextColor(0, 128, 0);
+        if (isCorrect) {
+          doc.setTextColor(0, 128, 0); 
+        }
         
         doc.text(`${i + 1}. ${choice}`, 15, yPosition);
         yPosition += 7;
         
-        if (isCorrect) doc.setTextColor(0);
+        if (isCorrect) {
+          doc.setTextColor(0); 
+        }
       });
       
-      yPosition += 5;
+      yPosition += 5; 
+      
       if (yPosition > 280) {
         doc.addPage();
         yPosition = 10;
@@ -167,25 +157,24 @@ const MCQQuiz = () => {
 
   const renderQuestion = () => {
     if (!questions.length) return null;
-    
     if (quizComplete) {
       return (
         <div className="space-y-6 text-center">
           <div className="text-3xl font-bold text-[#8b5e34]">Quiz Complete!</div>
           <div className="text-xl text-[#8b5e34]">
-            Score: {score}/{questions.length}
+            You scored {score} out of {questions.length} questions correctly!
           </div>
-          <div className="flex justify-center gap-4 mt-4 flex-wrap">
+          <div className="flex justify-center gap-4 mt-4">
             <Button
               onClick={startNewQuiz}
-              className="bg-[#e6c199] text-[#8b5e34] hover:bg-[#d4b089]"
+              className="bg-[#e6c199] text-[#8b5e34] hover:bg-[#d4b089] transition-colors"
               size="lg"
             >
-              New Flashcards
+              Create New Flashcards
             </Button>
             <Button
               onClick={generatePdf}
-              className="bg-[#e6c199] text-[#8b5e34] hover:bg-[#d4b089]"
+              className="bg-[#e6c199] text-[#8b5e34] hover:bg-[#d4b089] transition-colors"
               size="lg"
             >
               Download PDF
@@ -205,11 +194,10 @@ const MCQQuiz = () => {
 
     return (
       <div className="space-y-6">
-        <div className="text-xl font-semibold text-[#8b5e34]">
+        <div className="text-xl font-semibold text-[#8b5e34] mb-4">
           Question {currentQuestion + 1} of {questions.length}
         </div>
         <div className="text-lg text-[#8b5e34] mb-6">{question.question}</div>
-        
         <div className="grid gap-4">
           {choices.map((choice, index) => (
             <Button
@@ -233,14 +221,23 @@ const MCQQuiz = () => {
           ))}
         </div>
 
-        {showAnswer && (
+        {showAnswer && !quizComplete && (
           <div className="flex justify-end mt-6">
-            <Button
-              onClick={currentQuestion === questions.length - 1 ? finishQuiz : nextQuestion}
-              className="bg-[#e6c199] text-[#8b5e34] hover:bg-[#d4b089]"
-            >
-              {currentQuestion === questions.length - 1 ? "Finish Quiz" : "Next Question"}
-            </Button>
+            {currentQuestion === questions.length - 1 ? (
+              <Button
+                onClick={finishQuiz}
+                className="bg-[#e6c199] text-[#8b5e34] hover:bg-[#d4b089]"
+              >
+                Finish Questions
+              </Button>
+            ) : (
+              <Button
+                onClick={nextQuestion}
+                className="bg-[#e6c199] text-[#8b5e34] hover:bg-[#d4b089]"
+              >
+                Next Question
+              </Button>
+            )}
           </div>
         )}
       </div>
@@ -248,74 +245,68 @@ const MCQQuiz = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8 p-4">
-      <h1 className="text-3xl font-bold text-[#8b5e34] text-center">
-        Interactive Flashcards Generator
-      </h1>
+    <div className="max-w-4xl mx-auto space-y-8">
+      <h1 className="text-3xl font-bold text-[#8b5e34]">Generate Flashcards</h1>
 
-      <Card className="bg-white/50 backdrop-blur-sm rounded-lg shadow-lg">
-        <CardContent className="p-6">
-          {questions.length > 0 ? (
-            renderQuestion()
-          ) : (
-            <div className="space-y-8">
-              <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-6">
+      <div className="relative backdrop-blur-sm py-8">
+        {!questions.length ? (
+          <div className="space-y-16">
+            <div className="flex flex-col items-center justify-center min-h-[50vh] px-4 space-y-12">
+              <div className="w-full max-w-3xl mx-auto relative group">
+                <div className="absolute -inset-1 bg-gradient-to-r from-[#e6c199] to-[#d4b089] rounded-2xl blur opacity-25 group-hover:opacity-40 transition duration-1000"></div>
                 <Input
                   value={topic}
                   onChange={(e) => setTopic(e.target.value)}
-                  placeholder="Enter topic (e.g., 'Quantum Physics' or 'Renaissance Art')..."
-                  className="w-full max-w-xl p-4 text-lg border-2 border-[#e6c199] rounded-lg shadow-sm focus:ring-2 focus:ring-[#8b5e34]"
-                  onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+                  placeholder={placeholderText}
+                  className="relative w-full p-8 text-2xl text-center rounded-2xl shadow-[0_0_15px_rgba(230,193,153,0.3)] border-2 border-[#e6c199]/50 focus:border-[#e6c199] focus:ring-4 focus:ring-[#e6c199]/30 transition-all duration-300 bg-white/5 backdrop-blur-sm hover:shadow-[0_0_20px_rgba(230,193,153,0.4)]"
                 />
-                
+              </div>
+              <div className="relative group w-fit mx-auto">
+                <div className="absolute -inset-1 bg-gradient-to-r from-[#e6c199] to-[#d4b089] rounded-2xl blur opacity-25 group-hover:opacity-40 transition duration-1000"></div>
                 <Button
                   onClick={handleSearch}
                   disabled={loading}
-                  className="px-8 py-3 bg-[#e6c199] text-[#8b5e34] hover:bg-[#d4b089] text-lg font-semibold"
+                  className="relative px-16 py-6 bg-white/5 backdrop-blur-sm text-[#8b5e34] hover:bg-white/10 hover:shadow-[0_0_20px_rgba(230,193,153,0.4)] transition-all duration-300 text-xl font-bold rounded-2xl shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {loading ? "Generating..." : "Generate Flashcards"}
+                  {loading ? (
+                    <span className="flex items-center gap-2">
+                      <svg className="animate-spin h-5 w-5 text-current" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"/>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/>
+                      </svg>
+                      Generating...
+                    </span>
+                  ) : (
+                    <span className="bg-gradient-to-r from-[#8b5e34] to-[#6d4a2f] bg-clip-text text-transparent">
+                      Generate Flashcards
+                    </span>
+                  )}
                 </Button>
-
-                {error && (
-                  <div className="p-4 bg-red-100 text-red-700 rounded-lg w-full max-w-xl text-center">
-                    {error}
-                  </div>
-                )}
               </div>
-
-              {flashcardHistory.length > 0 && (
-                <Card className="bg-[#fef5e7] border-2 border-[#8b5e34] rounded-lg">
-                  <CardContent className="p-6 space-y-4">
-                    <h2 className="text-xl font-bold text-[#8b5e34] mb-4">
-                      Recent Quiz History
-                    </h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {flashcardHistory.slice(-4).map((history) => (
-                        <div
-                          key={history.id}
-                          className="p-4 bg-[#fdf1e1] border-2 border-[#d4b089] rounded-lg"
-                        >
-                          <div className="flex justify-between items-center">
-                            <div className="text-lg font-semibold text-[#8b5e34]">
-                              {history.keyword}
-                            </div>
-                            <div className="text-sm text-[#8b5e34]">
-                              {new Date(history.createdAt).toLocaleDateString()}
-                            </div>
-                          </div>
-                          <div className="mt-2 text-[#8b5e34]">
-                            Score: {history.score}/{history.questions}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-              )}
             </div>
-          )}
-        </CardContent>
-      </Card>
+            <div className="bg-gradient-to-b from-[#fef5e7]/50 to-[#fef5e7]/30 backdrop-blur-md rounded-2xl p-8 shadow-lg border border-[#e6c199]/30">
+              <h2 className="text-2xl font-bold text-[#8b5e34] mb-6">Recent Quizzes</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {flashcardHistory.slice(-4).map((history) => (
+                  <div
+                    key={history.id}
+                    className="p-6 bg-white/10 backdrop-blur-sm border border-[#e6c199]/30 rounded-xl shadow-[0_4px_12px_rgba(230,193,153,0.15)] hover:shadow-[0_4px_16px_rgba(230,193,153,0.25)] transition-all duration-300"
+                  >
+                    <div className="text-lg font-semibold text-[#8b5e34]">
+                      Score: {history.score}/{history.questions}
+                    </div>
+                    <div className="text-sm text-[#8b5e34]/80">Keyword: {history.keyword}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className="space-y-6 bg-white/5 backdrop-blur-sm rounded-2xl p-8">
+            {renderQuestion()}
+          </div>
+        )}
+      </div>
     </div>
   );
 };
