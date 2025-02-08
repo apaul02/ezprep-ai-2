@@ -14,6 +14,9 @@ export async function getScores() {
     const response = await prisma.flashcardHistory.findMany({
       where: {
         userId: Number(session.user.id)
+      },
+      orderBy: {
+        id: "desc"
       }
     })
     return response;
