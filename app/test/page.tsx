@@ -13,6 +13,7 @@ export default async function TestPage() {
       <div>{JSON.stringify(session.user.username)}</div>
       <div>{JSON.stringify(session.user.name)}</div>
       <div>{JSON.stringify(session.user.email)}</div>
+      <div>{JSON.stringify(session.user.id)}</div>
     </div>
   )
 }
