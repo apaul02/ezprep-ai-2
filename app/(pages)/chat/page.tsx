@@ -1,9 +1,12 @@
-import React from 'react'
+import ChatInterface from "@/components/ChatInterface";
 
-function page() {
+export default function ChatPage() {
   return (
-    <div>page</div>
-  )
+    <div className="min-h-screen bg-[#fcf3e4]">
+      <div className="max-w-7xl mx-auto">
+        <h1 className="text-3xl font-bold text-[#8b5e34] mb-8">AI Study Assistant</h1>
+        <ChatInterface />
+      </div>
+    </div>
+  );
 }
-
-export default page;

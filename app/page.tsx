@@ -209,7 +209,7 @@ export default function Home() {
           
           {/* Hero Video Dialog */}
           <div className="mt-16 pt-5 pb-20">
-          <div className="absolute left-20 pt-40">
+          {/* <div className="absolute left-20 pt-40">
                 <Image
                   src="/images/our-pitch.png"
                   alt="Our Pitch"
@@ -217,7 +217,7 @@ export default function Home() {
                   height={100}
                   className="ml-20 mt-20"
                 />
-              </div>
+              </div> */}
             <h1 className="text-[#292828] text-6xl font-gloock mb-10 mt-5 text-center">
               So What is all the fuzz about?
             </h1>
