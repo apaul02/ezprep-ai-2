@@ -14,10 +14,9 @@ const geistMono = Geist_Mono({
 });
 
 const gloock = Gloock({
+  variable: "--font-gloock",
   subsets: ["latin"],
   weight: "400",
-  variable: "--font-gloock",
-  display: 'swap',
 });
 
 export const metadata: Metadata = {

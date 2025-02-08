@@ -28,15 +28,15 @@ export default function Home() {
                   </div>
                 ))}
               </div>
-              <span className="text-sm">100+ signed up already!</span>
+              <span className="text-sm text-[#292828]">100+ signed up already!</span>
             </div>
 
-            <h1 className="text-[90px] mb-8 leading-tight font-gloock">
+            <h1 className="text-[#292828] text-[90px] mb-8 leading-tight font-gloock">
               Learn Something in
               <br />
               Every Click
             </h1>
-            <p className="text-gray-600 text-lg mb-8 max-w-2xl">
+            <p className="text-[#292828] text-lg mb-8 max-w-2xl">
               Are you tired of pulling one nighter and still failing your exams?
               <br />
               Well don&apos;t worry we got you covered.
@@ -59,7 +59,7 @@ export default function Home() {
                 <div className="h-20 bg-black/10 rounded-lg mb-4 flex items-center justify-center">
                   <div className="w-8 h-8 bg-[#292828] rounded-full" />
                 </div>
-                <p className="text-sm">Yeah! Ukraine is my favorite country in the whole world 💛💙</p>
+                <p className="text-sm">Yeah! India is my favorite country in the whole world 🧡🤍💚</p>
               </div>
               {/* Progress Card */}
               <div className="bg-[#E1F6FF] rounded-xl p-6 transform rotate-[5deg] hover:scale-105 transition-all cursor-pointer">
@@ -118,12 +118,12 @@ export default function Home() {
         {/* Features Section */}
         <section className="container mx-auto px-4 py-24 max-w-6xl">
           <div className="max-w-3xl">
-            <h2 className="text-6xl font-gloock mb-6">
+            <h2 className="text-[#292828] text-6xl font-gloock mb-6">
               your &quot;swiss knife&quot; for
               <br />
               learning anything.
             </h2>
-            <p className="text-gray-600 text-lg mb-16">
+            <p className="text-[#292828] text-lg mb-16">
               ezPrep simplifies learning with AI-powered flashcards, progress tracking, AI podcasts, and competitive
               leaderboards, all while rewarding your progress.
             </p>
@@ -165,7 +165,6 @@ export default function Home() {
           </div>
         </section>
       </main>
-
       <Footer />
     </div>
   )

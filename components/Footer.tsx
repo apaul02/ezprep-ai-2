@@ -1,4 +1,5 @@
 import Link from "next/link"
+import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 
@@ -8,111 +9,121 @@ export function Footer() {
       <div className="container mx-auto px-6">
         <div className="grid grid-cols-4 gap-8">
           <div>
-            <h3 className="font-medium mb-4">Product</h3>
+            <h3 className="font-medium text-[#292828] mb-4">Features</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="#" className="text-sm text-gray-600">
-                  AI Flashcards
+                <Link href="#" className="text-sm text-[#292828]/70 hover:text-[#292828]">
+                  Interactive Flashcards
                 </Link>
               </li>
               <li>
-                <Link href="#" className="text-sm text-gray-600">
-                  AI Podcasts
+                <Link href="#" className="text-sm text-[#292828]/70 hover:text-[#292828]">
+                  AI Study Assistant
                 </Link>
               </li>
               <li>
-                <Link href="#" className="text-sm text-gray-600">
-                  Leaderboards
+                <Link href="#" className="text-sm text-[#292828]/70 hover:text-[#292828]">
+                  Progress Tracking
                 </Link>
               </li>
               <li>
-                <Link href="#" className="text-sm text-gray-600">
-                  Courses
+                <Link href="#" className="text-sm text-[#292828]/70 hover:text-[#292828]">
+                  Study Groups
                 </Link>
               </li>
               <li>
-                <Link href="#" className="text-sm text-gray-600">
-                  ezPerks
+                <Link href="#" className="text-sm text-[#292828]/70 hover:text-[#292828]">
+                  Rewards Program
                 </Link>
               </li>
             </ul>
           </div>
           <div>
-            <h3 className="font-medium mb-4">Explore</h3>
+            <h3 className="font-medium text-[#292828] mb-4">Study Resources</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="#" className="text-sm text-gray-600">
-                  Resources
+                <Link href="#" className="text-sm text-[#292828]/70 hover:text-[#292828]">
+                  Subject Guides
                 </Link>
               </li>
               <li>
-                <Link href="#" className="text-sm text-gray-600">
-                  Blog
+                <Link href="#" className="text-sm text-[#292828]/70 hover:text-[#292828]">
+                  Study Tips
                 </Link>
               </li>
               <li>
-                <Link href="#" className="text-sm text-gray-600">
-                  Documents
+                <Link href="#" className="text-sm text-[#292828]/70 hover:text-[#292828]">
+                  Practice Tests
                 </Link>
               </li>
             </ul>
           </div>
           <div>
-            <h3 className="font-medium mb-4">Company</h3>
+            <h3 className="font-medium text-[#292828] mb-4">Support</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="#" className="text-sm text-gray-600">
-                  About us
+                <Link href="#" className="text-sm text-[#292828]/70 hover:text-[#292828]">
+                  Help Center
                 </Link>
               </li>
               <li>
-                <Link href="#" className="text-sm text-gray-600">
-                  Partners
+                <Link href="#" className="text-sm text-[#292828]/70 hover:text-[#292828]">
+                  Student Community
                 </Link>
               </li>
               <li>
-                <Link href="#" className="text-sm text-gray-600">
-                  Customers
+                <Link href="#" className="text-sm text-[#292828]/70 hover:text-[#292828]">
+                  Teacher Resources
                 </Link>
               </li>
               <li>
-                <Link href="#" className="text-sm text-gray-600">
-                  Contact us
+                <Link href="#" className="text-sm text-[#292828]/70 hover:text-[#292828]">
+                  Contact Us
                 </Link>
               </li>
             </ul>
           </div>
           <div>
-            <h3 className="font-medium mb-4">Subscribe</h3>
+            <h3 className="font-medium text-[#292828] mb-4">Newsletter</h3>
             <div className="flex gap-2">
-              <Input type="email" placeholder="Your email" className="bg-white" />
-              <Button className="bg-blue-500 text-white">→</Button>
+              <Input 
+                type="email" 
+                placeholder="Enter your email" 
+                className="bg-white/50 border-[#292828]/10 focus:border-[#292828]/30 placeholder-[#292828]/50" 
+              />
+              <Button className="bg-[#292828] text-white hover:bg-[#292828]/90">→</Button>
             </div>
-            <p className="text-sm text-gray-600 mt-4">
-              Hello, we are actively trying to reach you about your cars extended warranty
+            <p className="text-sm text-[#292828]/70 mt-4">
+              Get weekly study tips and updates on new features
             </p>
           </div>
         </div>
-        <div className="flex justify-between items-center mt-12 pt-6 border-t border-gray-300">
+        <div className="flex justify-between items-center mt-12 pt-6 border-t border-[#292828]/10">
           <div className="flex items-center gap-6">
-            <Button variant="outline" size="sm">
-              Logo
-            </Button>
-            <div className="flex gap-4 text-sm text-gray-600">
-              <Link href="#">Terms</Link>
-              <Link href="#">Privacy</Link>
-              <Link href="#">Cookies</Link>
+            <div className="flex items-center gap-2">
+              <Image 
+                src="/images/Graduation-Cap.png"
+                alt="ezPrep Logo" 
+                width={24} 
+                height={24} 
+              />
+              <span className="text-[#292828] font-medium font-gloock ">ezPrep</span>
+            </div>
+            <div className="flex gap-4 text-sm text-[#292828]/70">
+              <Link href="#" className="hover:text-[#292828]">Terms</Link>
+              <Link href="#" className="hover:text-[#292828]">Privacy</Link>
+              <Link href="#" className="hover:text-[#292828]">Cookies</Link>
             </div>
           </div>
           <div className="flex gap-4">
-            <Link href="#" className="text-gray-600">
-              In
+            <Link href="#" className="text-[#292828]/70 hover:text-[#292828]">
+              LinkedIn
             </Link>
-            <Link href="#" className="text-gray-600">
-              f
+            <Link href="#" className="text-[#292828]/70 hover:text-[#292828]">
+              Facebook
             </Link>
-            <Link href="#" className="text-gray-600">
-              X
+            <Link href="#" className="text-[#292828]/70 hover:text-[#292828]">
+              Twitter
             </Link>
           </div>
         </div>
@@ -120,4 +131,3 @@ export function Footer() {
     </footer>
   )
 }
-
