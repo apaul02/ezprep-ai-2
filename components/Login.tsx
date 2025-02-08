@@ -11,6 +11,7 @@ import { CircleCheckBig } from "lucide-react"
 import Link from "next/link"
 import { useToast } from "@/hooks/use-toast"
 import { useRouter } from "next/navigation"
+import { signIn } from "next-auth/react"
 
 const loginSchema = z.object({
   email: z.string().email({
@@ -33,8 +34,53 @@ export function LoginForm() {
   })
 
   async function onSubmit(values: z.infer<typeof loginSchema>) {
-    // ... existing onSubmit logic ...
-    console.log(values)
+    try {
+      const response = await signIn("credentials", {
+        email: values.email,
+        password: values.password,
+        redirect: false
+      })
+      if(response?.error) {
+        if(response.error.toLowerCase().includes("no user found with this email")) {
+          form.setError("email", {
+            type: "manual",
+            message: "No user found with this email"
+          })
+        }else if (response.error.toLowerCase().includes("invalid password")) {
+          form.setError("password", {
+            type: "manual",
+            message: "Invalid password"
+          })
+        }else {
+          toast({
+            title: "Error",
+            description: response.error,
+            variant: "destructive"
+          })
+        }
+        
+        console.log(response)
+        console.log(values)
+        return;
+      }else if (response?.ok) {
+        toast({
+          title: "Success",
+          description: "Successfully signed up"
+        })
+      }
+      
+      console.log(response?.status)
+      console.log(response)
+      console.log(values)
+      router.push("/test")
+      
+    }catch(e) {
+      toast({
+        title: "Error",
+        description: `${e}`,
+        variant: "destructive"
+      })
+    }
   }
 
   return (
