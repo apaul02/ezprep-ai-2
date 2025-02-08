@@ -146,8 +146,8 @@ export function LoginForm() {
           </Form>
           <p className="text-center text-[#292828]/70 mt-4 text-sm">
             Already have an account?{" "}
-            <Link href="/login" className="text-[#292828] hover:underline">
-              Log in
+            <Link href="/signup" className="text-[#292828] hover:underline">
+              Sign up
             </Link>
           </p>
         </CardContent>
