@@ -35,7 +35,6 @@ const navItems: NavItem[] = [
   { icon: <Video size={20} />, label: 'Video Learning', path: '/video' },
   { icon: <FileText size={20} />, label: 'Document Tools', path: '/document' },
   { icon: <MessageSquare size={20} />, label: 'AI Chat', path: '/chat' },
-  { icon: <Settings size={20} />, label: 'Settings', path: '/settings' },
 ];
 
 const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
@@ -49,26 +48,43 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
     return path !== '/dashboard' && pathname.includes(path);
   };
 
+  // Handle click outside
+  React.useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const sidebar = document.getElementById('sidebar');
+      if (sidebar && !sidebar.contains(event.target as Node) && window.innerWidth < 1024 && isOpen) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isOpen, setIsOpen]);
+
   return (
     <>
       {/* Mobile Overlay */}
       {isOpen && (
-        <div 
+        <div
           className="fixed inset-0 bg-black bg-opacity-50 z-20 lg:hidden"
           onClick={() => setIsOpen(false)}
         />
       )}
 
       {/* Sidebar */}
-      <div 
+      <aside
+        id="sidebar"
         className={`
           fixed lg:static inset-y-0 left-0 z-30
           flex flex-col bg-[#DFD2BC]
           transition-all duration-300 ease-in-out
           ${isOpen ? 'w-64' : 'w-20'}
-          ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
-        `}
-      >
+          ${isOpen ? 'translate-x-0' : '-translate-x-[calc(100% - 5rem)] lg:translate-x-0'}
+          flex lg:flex
+       `}
+     >
         {/* Logo Section */}
         <div className="flex items-center h-16 px-4 border-b border-gray-200">
           <Link href="/dashboard" className="flex items-center gap-2">
@@ -77,10 +93,9 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
               alt="ezPrep Logo"
               width={24}
               height={24}
-              className="hover:scale-110 transition-all duration-300"
             />
             {isOpen && (
-              <span className="animate-fade-in hover:scale-110 transition-transform duration-300 font-gloock">
+              <span className="font-gloock">
                 EzPrep.ai
               </span>
             )}
@@ -98,12 +113,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
           {navItems.map((item) => (
             <button
               key={item.path}
-              onClick={() => {
-                router.push(item.path);
-                if (window.innerWidth <= 768) {
-                  setIsOpen(false);
-                }
-              }}
+              onClick={() => router.push(item.path)}
               className={`
                 w-full flex items-center px-3 py-3 rounded-lg
                 transition-all duration-200
@@ -126,6 +136,20 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
           ))}
         </nav>
 
+        {/* Settings Button */}
+        <button
+          onClick={() => router.push('/settings')}
+          className={`
+            flex items-center px-3 py-3 mx-2 mt-2 rounded-lg
+            text-[#8b5e34] hover:bg-[#e6c199] hover:bg-opacity-50
+            transition-all duration-200
+            ${!isOpen && 'justify-center'}
+          `}
+        >
+          <Settings size={20} />
+          {isOpen && <span className="ml-3 font-medium">Settings</span>}
+        </button>
+
         {/* Logout Button */}
         <button
           onClick={() => {
@@ -147,7 +171,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
         <button
           onClick={() => setIsOpen(!isOpen)}
           className="
-            absolute top-4 -right-3 lg:flex hidden
+            absolute top-4 -right-3 flex lg:hidden
             w-6 h-6 rounded-full bg-[#DFD2BC] border border-[#e6c199]
             items-center justify-center
             text-[#8b5e34] hover:text-[#6d4a29]
@@ -157,7 +181,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
         >
           <ChevronRight size={14} className={`transform transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
         </button>
-      </div>
+      </aside>
     </>
   );
 };
