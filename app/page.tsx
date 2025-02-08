@@ -22,19 +22,21 @@ export default function Home() {
               <div className="flex -space-x-1">
                 {[...Array(4)].map((_, i) => (
                   <div key={i} className="w-6 h-6 rounded-full border-2 border-[#292828] overflow-hidden">
-                    <img
-                      src={`https://api.dicebear.com/7.x/personas/svg?seed=user${i}`}
+                    <Image
+                      src={`/images/avatar-${i + 1}.jpg`}
                       alt={`User ${i + 1}`}
-                      className="w-full h-full object-cover"
+                      width={24}
+                      height={24}
+                      className="w-full h-full object-cover shadow-lg"
                     />
                   </div>
                 ))}
               </div>
-              <span className="text-sm font-bold text-[#292828]">100+ signed up already!</span>
+              <span className="text-sm text-[#292828] font-[--font-alata]">100+ signed up already!</span>
             </div>
 
             <div className="relative">
-              <div className="absolute -left-48 top-20">
+              <div className="absolute -left-20 top-20 ml-6">
                 <Image
                   src="/images/stars.png"
                   alt="Stars decoration"
@@ -112,7 +114,7 @@ export default function Home() {
               </div>
               {/* Calendar Card */}
               <div className="bg-[#FFE1F9] rounded-xl p-8 transform rotate-[-5deg] hover:scale-105 transition-all cursor-pointer">
-                <div className="text-sm text-gray-500 mb-3">Plan your lessons</div>
+                <div className="text-sm text-black mb-3">Plan your lessons</div>
                 <p className="text-center mb-6 font-medium text-base">December 2022</p>
                 <div className="grid grid-cols-7 gap-2 text-sm">
                   {[...Array(31)].map((_, i) => (
@@ -124,7 +126,7 @@ export default function Home() {
               </div>
               {/* Leaderboard Card */}
               <div className="bg-[#D1FFE4] rounded-xl p-8 transform rotate-[5deg] hover:scale-105 transition-all cursor-pointer">
-                <div className="text-sm text-gray-500 mb-3">Compete with others</div>
+                <div className="text-sm text-black mb-3">Compete with others</div>
                 <div className="space-y-4">
                   {[
                     { score: "24331", name: "Artem A." },
@@ -148,7 +150,7 @@ export default function Home() {
         </section>
 
         {/* Features Section */}
-        <section className="container mx-auto px-4 py-24 max-w-6xl">
+        <section className="container mx-auto px-4 py-24 -mt-10 max-w-6xl">
           <div className="max-w-3xl relative">
             <h2 className="text-[#292828] text-6xl font-gloock mb-6">
               your &quot;swiss knife&quot; for
@@ -206,12 +208,28 @@ export default function Home() {
           </div>
           
           {/* Hero Video Dialog */}
-          <div className="mt-16 pt-5 pb-20 text-center">
-            <HeroVideoDialog
-              videoSrc="https://www.youtube.com/embed/dQw4w9WgXcQ"
-              thumbnailSrc="/images/thumbnail.jpeg"
-              animationStyle="from-bottom"
-            />
+          <div className="mt-16 pt-5 pb-20">
+          <div className="absolute left-20 pt-40">
+                <Image
+                  src="/images/our-pitch.png"
+                  alt="Our Pitch"
+                  width={200}
+                  height={100}
+                  className="ml-20 mt-20"
+                />
+              </div>
+            <h1 className="text-[#292828] text-6xl font-gloock mb-10 mt-5 text-center">
+              So What is all the fuzz about?
+            </h1>
+            <div className="flex gap-8 items-center">
+              <div className="flex-1">
+                <HeroVideoDialog
+                  videoSrc="https://www.youtube.com/embed/dQw4w9WgXcQ"
+                  thumbnailSrc="/images/thumbnail.jpeg"
+                  animationStyle="from-bottom"
+                />
+              </div>
+            </div>
           </div>
         </section>
       </main>
