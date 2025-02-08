@@ -32,7 +32,7 @@ const navItems: NavItem[] = [
     { icon: <Home size={20} />, label: 'Dashboard', path: '/dashboard' },
     { icon: <BookOpen size={20} />, label: 'Flashcards', path: '/flashcard' },
     { icon: <Headphones size={20} />, label: 'Podcast Library', path: '/podcast' },
-    { icon: <Video size={20} />, label: 'Video Learning', path: '/video' },
+    { icon: <Video size={20} />, label: 'Video Learning', path: '/videolearning' },
     { icon: <FileText size={20} />, label: 'Document Tools', path: '/document' },
     { icon: <MessageSquare size={20} />, label: 'AI Chat', path: '/chat' },
 ];

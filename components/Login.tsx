@@ -72,7 +72,7 @@ export function LoginForm() {
       console.log(response?.status)
       console.log(response)
       console.log(values)
-      router.push("/test")
+      router.push("/dashboard")
       
     }catch(e) {
       toast({

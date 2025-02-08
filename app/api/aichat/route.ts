@@ -6,7 +6,10 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
 const conversationHistory = new Map<string, string[]>(); // Use user ID as key
 
 function cleanMarkdown(text: string): string {
-  return text.replace(/\*\*/g, '').replace(/#{1,4}/g, '');
+  return text
+    .replace(/\*\*/g, '')
+    .replace(/#{1,4}/g, '')
+    .replace(/_([^_]+)_/g, '$1');
 }
 
 export async function POST(request: Request) {

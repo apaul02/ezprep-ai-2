@@ -61,9 +61,17 @@ export default function ChatInterface() {
         timestamp: new Date(),
       }]);
     } catch (error) {
+      let errorMessage = 'Sorry, I encountered an error processing your request. Please try again.';
+      if (error instanceof Error) {
+        const response = await fetch('/api/aichat').catch(() => null);
+        if (response) {
+          const data = await response.json().catch(() => ({ error: 'Unknown error occurred' }));
+          errorMessage = data.error || errorMessage;
+        }
+      }
       setMessages(prev => [...prev, {
         role: 'assistant',
-        content: error instanceof Error ? error.message : 'Sorry, I encountered an error processing your request. Please try again.',
+        content: errorMessage,
         timestamp: new Date(),
       }]);
     } finally {
