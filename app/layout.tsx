@@ -14,9 +14,10 @@ const geistMono = Geist_Mono({
 });
 
 const gloock = Gloock({
-  variable: "--font-gloock",
   subsets: ["latin"],
   weight: "400",
+  variable: "--font-gloock",
+  display: 'swap',
 });
 
 export const metadata: Metadata = {
@@ -30,14 +31,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <Providers>
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} ${gloock.variable} antialiased`}
-        >
-          {children}
-        </body>
-      </Providers>
+    <html lang="en" suppressHydrationWarning>
+      <head />
+      <body
+        suppressHydrationWarning
+        className={`${geistSans.variable} ${geistMono.variable} ${gloock.variable} antialiased`}
+      >
+        <Providers>{children}</Providers>
+      </body>
     </html>
   );
 }
